@@ -2,16 +2,19 @@
 
 namespace app\controllers;
 use Yii;
-use app\models\Event;
-use app\models\EventSearch;
+use app\models\Tutor;
+use app\models\TutorSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Comment;
+use app\models\Price;
+
 
 /**
- * EventController implements the CRUD actions for Event model.
+ * TutorController implements the CRUD actions for Tutor model.
  */
-class EventController extends SiteController
+class TutorController extends SiteController
 {
     /**
      * @inheritDoc
@@ -32,25 +35,34 @@ class EventController extends SiteController
     }
 
     /**
-     * Lists all Event models.
+     * Lists all Tutor models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new EventSearch();
+        $tutors = Tutor::find()->all();
+        $searchModel = new TutorSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        return $this->render('index', compact('tutors', 'searchModel', 'dataProvider'));
+    }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+    public function actionTutor()
+    {
+        if(isset($_GET['id']) && $_GET['id'] != "" && filter_var($_GET['id'], FILTER_VALIDATE_INT)){
+            $tutors = Tutor::find()->where(['id' => $_GET['id']])->one();
+            $price = Price::find()->where(['id_tutor' => $_GET['id']])->all();
+            $com = Comment::find()->where(['id_tutor' => $_GET['id']])->all();
+            return $this->render('tutor', compact('tutors','price', 'com'));
+            
+        } 
+        return $this->redirect('index');
     }
 
     /**
-     * Displays a single Event model.
-     * @param int $id ID
+     * Displays a single Tutor model.
+     * @param int $id
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -62,15 +74,13 @@ class EventController extends SiteController
     }
 
     /**
-     * Creates a new Event model.
+     * Creates a new Tutor model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Event();
-        $model->id_tutor = $_GET['id'];
-        $model->id_student = Yii::$app->user->id;
+        $model = new Tutor();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -86,9 +96,9 @@ class EventController extends SiteController
     }
 
     /**
-     * Updates an existing Event model.
+     * Updates an existing Tutor model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $id
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -106,9 +116,9 @@ class EventController extends SiteController
     }
 
     /**
-     * Deletes an existing Event model.
+     * Deletes an existing Tutor model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -120,15 +130,15 @@ class EventController extends SiteController
     }
 
     /**
-     * Finds the Event model based on its primary key value.
+     * Finds the Tutor model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Event the loaded model
+     * @param int $id
+     * @return Tutor the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Event::findOne(['id' => $id])) !== null) {
+        if (($model = Tutor::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

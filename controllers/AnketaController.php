@@ -1,17 +1,19 @@
 <?php
 
 namespace app\controllers;
-use Yii;
-use app\models\Event;
-use app\models\EventSearch;
+
+use app\models\Anketa;
+use app\models\SearchAnketa;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\models\Tutor;
+use app\models\Language;
+use app\models\AnketaSearch;
 /**
- * EventController implements the CRUD actions for Event model.
+ * AnketaController implements the CRUD actions for Anketa model.
  */
-class EventController extends SiteController
+class AnketaController extends SiteController
 {
     /**
      * @inheritDoc
@@ -32,45 +34,43 @@ class EventController extends SiteController
     }
 
     /**
-     * Lists all Event models.
+     * Lists all Anketa models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new EventSearch();
+        $searchModel = new SearchAnketa();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 
     /**
-     * Displays a single Event model.
+     * Displays a single Anketa model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        //$id_student = Yii::$app->user->id;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id)
         ]);
     }
 
     /**
-     * Creates a new Event model.
+     * Creates a new Anketa model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Event();
-        $model->id_tutor = $_GET['id'];
-        $model->id_student = Yii::$app->user->id;
+        $model = new Anketa();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -86,7 +86,7 @@ class EventController extends SiteController
     }
 
     /**
-     * Updates an existing Event model.
+     * Updates an existing Anketa model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -106,7 +106,7 @@ class EventController extends SiteController
     }
 
     /**
-     * Deletes an existing Event model.
+     * Deletes an existing Anketa model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -120,18 +120,33 @@ class EventController extends SiteController
     }
 
     /**
-     * Finds the Event model based on its primary key value.
+     * Finds the Anketa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Event the loaded model
+     * @return Anketa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Event::findOne(['id' => $id])) !== null) {
+        if (($model = Anketa::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionAbout()
+    {
+        //$this->layout = 'main2'; 
+        
+        $searchModel = new AnketaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('about',[
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
+        ]);
+
+        //return $this->render('about');
     }
 }

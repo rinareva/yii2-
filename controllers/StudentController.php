@@ -1,17 +1,17 @@
 <?php
 
 namespace app\controllers;
-use Yii;
-use app\models\Event;
-use app\models\EventSearch;
+
+use app\models\Student;
+use app\models\StudentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EventController implements the CRUD actions for Event model.
+ * StudentController implements the CRUD actions for Student model.
  */
-class EventController extends SiteController
+class StudentController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,15 +32,14 @@ class EventController extends SiteController
     }
 
     /**
-     * Lists all Event models.
+     * Lists all Student models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new EventSearch();
+        $searchModel = new StudentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -49,7 +48,7 @@ class EventController extends SiteController
     }
 
     /**
-     * Displays a single Event model.
+     * Displays a single Student model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -62,15 +61,13 @@ class EventController extends SiteController
     }
 
     /**
-     * Creates a new Event model.
+     * Creates a new Student model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Event();
-        $model->id_tutor = $_GET['id'];
-        $model->id_student = Yii::$app->user->id;
+        $model = new Student();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -86,7 +83,7 @@ class EventController extends SiteController
     }
 
     /**
-     * Updates an existing Event model.
+     * Updates an existing Student model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -106,7 +103,7 @@ class EventController extends SiteController
     }
 
     /**
-     * Deletes an existing Event model.
+     * Deletes an existing Student model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -120,15 +117,15 @@ class EventController extends SiteController
     }
 
     /**
-     * Finds the Event model based on its primary key value.
+     * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Event the loaded model
+     * @return Student the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Event::findOne(['id' => $id])) !== null) {
+        if (($model = Student::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
